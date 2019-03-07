@@ -261,10 +261,12 @@ For `meshData`, since the data is too large, it is sent via 4 sequential units, 
 
 1.  Vertices unit. If `pointCount` is non-zero, this unit delivers the vertices. The structures on the shared memory starting at offset `offset` are almost the same as point cloud except the absence of `id`:
    ![image-20190305144233650](assets/image-20190305144233650.png)
+   
    If `hasNormal` is `false`, then the normal part will be missing. If `hasTexture` is false, then the color part will be missing. If `incremental` is false, the id part will be missing.
 2. Texture image unit. If `hasTexturePicture` is `true`, this unit delivers the texture image. The image has `textureImgWidth * textureImgHeight` pixels, each of which is 3 bytes of RGB.
 3. Triangles unit. If `faceCount` is non-zero, this unit delivers the indexed triangles.  The structures on the shared memory starting at offset `offset` are:
    ![image-20190305145018407](assets/image-20190305145018407.png)
+   
    If `hasTexturePicture` is false, then the part of texture uv index will be absent.
 4. Texture UV unit. If `textureUVCount` is non-zero, this unit delivers the texture UV coordinates. The structures on the shared memory starting at offset `offset` are:
    ![image-20190305145349778](assets/image-20190305145349778.png)
@@ -319,6 +321,7 @@ The type of your connected camera. For 2X Series, there three types:
 ### Device check
 
 Check the hardware environment to determine whether the GPU and USB are good for the camera.
+
 | Type        | Envelop           | Payload                 |
 | ----------- | ----------------- | ----------------------- |
 | Request Get | v1.0/device/check | REQ: None REP: Int Bool |
@@ -492,6 +495,7 @@ Get the current calibration distance. Note: it is not the real distance between 
 ### Calibration distance states
 
 Get the current calibration distance states for the current calibration group. It's better to refer to the calibration UI of EXScan Pro®.
+
 | Type        | Envelop                  | Payload            |
 | ----------- | ------------------------ | ------------------ |
 | Publish     | v1.0/cali/caliDistStates | JSON               |

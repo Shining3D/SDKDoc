@@ -764,6 +764,7 @@ Get the point count in the wrapped mesh.
 ### HDR
 
 Whether current scanning is HDR capable.
+
 | Type        | Envelop         | Payload                |
 | ----------- | --------------- | ---------------------- |
 | Publish     | v1.0/scan/isHDR | Int Bool               |
@@ -772,6 +773,7 @@ Whether current scanning is HDR capable.
 ### Use discovery
 
 Whether current scanning is using the discovery module.
+
 | Type        | Envelop                | Payload                |
 | ----------- | ---------------------- | ---------------------- |
 | Publish     | v1.0/scan/useDiscovery | Int Bool               |
@@ -819,6 +821,7 @@ Get the scan alignment type. There are 8 align types currently:
 - `"AT_TURTABLE"`: Use the turnable axis to do alignment in fix mode. Note: it's TUR**T**ABLE not TUR**N**ABLE. It's a historical typo, which should be hopefully corrected in the next version.
 - `"AT_CODE_POINT"`: Use special code markers to do alignment.
 - `"AT_GLOBAL_POINT"`: Use global markers to do alignment.
+
 | Type        | Envelop             | Payload              |
 | ----------- | ------------------- | -------------------- |
 | Publish     | v1.0/scan/alignType | String               |

@@ -7,7 +7,72 @@
 | 2019-03-06 | v1.0 beta3 | Jinming Chen | Add section of video data and range data |
 | 2019-03-07 | v1.0 beta4 | Jinming Chen | Add new project and open project         |
 
-[TOC]
+- [SDK Document](#sdk-document)
+  - [Overview](#overview)
+  - [Installation](#installation)
+  - [Configuration & run](#configuration--run)
+  - [Interfaces](#interfaces)
+    - [Heartbeat](#heartbeat)
+    - [Asynchronous actions](#asynchronous-actions)
+    - [Shared memory](#shared-memory)
+      - [Open from other languages](#open-from-other-languages)
+      - [Properties and structures on the shared memory](#properties-and-structures-on-the-shared-memory)
+        - [Point cloud related data](#point-cloud-related-data)
+        - [Video data](#video-data)
+    - [Device type](#device-type)
+    - [Device check](#device-check)
+    - [Infrared radiation](#infrared-radiation)
+    - [Texture/Color camera](#texturecolor-camera)
+    - [Discovery](#discovery)
+    - [Firmware upgradable](#firmware-upgradable)
+    - [PLE](#ple)
+    - [Device status](#device-status)
+    - [Device events](#device-events)
+    - [Calibration time](#calibration-time)
+    - [Snap enabled](#snap-enabled)
+    - [Calibration type](#calibration-type)
+    - [Calibration group](#calibration-group)
+    - [Calibration distance](#calibration-distance)
+    - [Calibration distance states](#calibration-distance-states)
+    - [Scan type](#scan-type)
+    - [Scan sub-type](#scan-sub-type)
+    - [Path of last saved project](#path-of-last-saved-project)
+    - [Path of current project](#path-of-current-project)
+    - [Has turnable](#has-turnable)
+    - [Scan with texture](#scan-with-texture)
+    - [Point distance range](#point-distance-range)
+    - [Predefined resolution values](#predefined-resolution-values)
+    - [Framerate](#framerate)
+    - [Point count](#point-count)
+    - [Marker count](#marker-count)
+    - [Triangle count in fix mode](#triangle-count-in-fix-mode)
+    - [Triangle count of wrapped mesh](#triangle-count-of-wrapped-mesh)
+    - [Frame memory](#frame-memory)
+    - [Camera position](#camera-position)
+    - [Scan with global markers](#scan-with-global-markers)
+    - [Current brightness](#current-brightness)
+    - [Brightness range](#brightness-range)
+    - [Current point count](#current-point-count)
+    - [Point count in wrapped mesh](#point-count-in-wrapped-mesh)
+    - [HDR](#hdr)
+    - [Use discovery](#use-discovery)
+    - [Has light box](#has-light-box)
+    - [Light box open](#light-box-open)
+    - [Has mesh data](#has-mesh-data)
+    - [Scan alignment type](#scan-alignment-type)
+    - [Scan status](#scan-status)
+    - [Scan distance](#scan-distance)
+    - [Rapid mode of EP](#rapid-mode-of-ep)
+    - [Rapid save of EP](#rapid-save-of-ep)
+    - [Create new project](#create-new-project)
+    - [Open project](#open-project)
+    - [No markers detected](#no-markers-detected)
+    - [Too flat](#too-flat)
+    - [Track lost](#track-lost)
+    - [Last mesh type](#last-mesh-type)
+    - [Last degree of mesh detail](#last-degree-of-mesh-detail)
+    - [Last simplification params](#last-simplification-params)
+    - [Last resize params for saving](#last-resize-params-for-saving)
 
 ## Overview
 
@@ -259,17 +324,29 @@ For `currentMarker`, `frameMarkerPoint` and `wholeMarkerPoint`, the structures o
 
 For `meshData`, since the data is too large, it is sent via 4 sequential units, each of which may consist of several packages (`totalPacks` is larger than 1):
 
-1.  Vertices unit. If `pointCount` is non-zero, this unit delivers the vertices. The structures on the shared memory starting at offset `offset` are almost the same as point cloud except the absence of `id`:
-   ![image-20190305144233650](assets/image-20190305144233650.png)
+**Unit 1: Vertices unit. **
+
+If `pointCount` is non-zero, this unit delivers the vertices. The structures on the shared memory starting at offset `offset` are almost the same as point cloud except the absence of `id`:
+
+![image-20190305144233650](assets/image-20190305144233650.png)
    
-   If `hasNormal` is `false`, then the normal part will be missing. If `hasTexture` is false, then the color part will be missing. If `incremental` is false, the id part will be missing.
-2. Texture image unit. If `hasTexturePicture` is `true`, this unit delivers the texture image. The image has `textureImgWidth * textureImgHeight` pixels, each of which is 3 bytes of RGB.
-3. Triangles unit. If `faceCount` is non-zero, this unit delivers the indexed triangles.  The structures on the shared memory starting at offset `offset` are:
-   ![image-20190305145018407](assets/image-20190305145018407.png)
+If `hasNormal` is `false`, then the normal part will be missing. If `hasTexture` is false, then the color part will be missing. If `incremental` is false, the id part will be missing.
+
+**Unit 2: Texture image unit. **
+
+If `hasTexturePicture` is `true`, this unit delivers the texture image. The image has `textureImgWidth * textureImgHeight` pixels, each of which is 3 bytes of RGB.
+
+**Unit 3: Triangles unit. **
+
+If `faceCount` is non-zero, this unit delivers the indexed triangles.  The structures on the shared memory starting at offset `offset` are:
+![image-20190305145018407](assets/image-20190305145018407.png)
    
-   If `hasTexturePicture` is false, then the part of texture uv index will be absent.
-4. Texture UV unit. If `textureUVCount` is non-zero, this unit delivers the texture UV coordinates. The structures on the shared memory starting at offset `offset` are:
-   ![image-20190305145349778](assets/image-20190305145349778.png)
+If `hasTexturePicture` is false, then the part of texture uv index will be absent.
+
+**Unit 4: Texture UV unit.**
+
+If `textureUVCount` is non-zero, this unit delivers the texture UV coordinates. The structures on the shared memory starting at offset `offset` are:
+![image-20190305145349778](assets/image-20190305145349778.png)
 
 After receving the 4 units, developers can put them togather and analyze/render the triangle mesh.
 

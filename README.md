@@ -324,7 +324,7 @@ For `currentMarker`, `frameMarkerPoint` and `wholeMarkerPoint`, the structures o
 
 For `meshData`, since the data is too large, it is sent via 4 sequential units, each of which may consist of several packages (`totalPacks` is larger than 1):
 
-**Unit 1: Vertices unit. **
+**Unit 1: Vertices unit.**
 
 If `pointCount` is non-zero, this unit delivers the vertices. The structures on the shared memory starting at offset `offset` are almost the same as point cloud except the absence of `id`:
 
@@ -332,11 +332,11 @@ If `pointCount` is non-zero, this unit delivers the vertices. The structures on 
    
 If `hasNormal` is `false`, then the normal part will be missing. If `hasTexture` is false, then the color part will be missing. If `incremental` is false, the id part will be missing.
 
-**Unit 2: Texture image unit. **
+**Unit 2: Texture image unit.**
 
 If `hasTexturePicture` is `true`, this unit delivers the texture image. The image has `textureImgWidth * textureImgHeight` pixels, each of which is 3 bytes of RGB.
 
-**Unit 3: Triangles unit. **
+**Unit 3: Triangles unit.**
 
 If `faceCount` is non-zero, this unit delivers the indexed triangles.  The structures on the shared memory starting at offset `offset` are:
 ![image-20190305145018407](assets/image-20190305145018407.png)

@@ -339,6 +339,7 @@ If `hasTexturePicture` is `true`, this unit delivers the texture image. The imag
 **Unit 3: Triangles unit.**
 
 If `faceCount` is non-zero, this unit delivers the indexed triangles.  The structures on the shared memory starting at offset `offset` are:
+
 ![image-20190305145018407](assets/image-20190305145018407.png)
    
 If `hasTexturePicture` is false, then the part of texture uv index will be absent.
@@ -346,6 +347,7 @@ If `hasTexturePicture` is false, then the part of texture uv index will be absen
 **Unit 4: Texture UV unit.**
 
 If `textureUVCount` is non-zero, this unit delivers the texture UV coordinates. The structures on the shared memory starting at offset `offset` are:
+
 ![image-20190305145349778](assets/image-20190305145349778.png)
 
 After receving the 4 units, developers can put them togather and analyze/render the triangle mesh.

@@ -104,7 +104,7 @@ Double click Sn3DPlatform.exe and then the SDK is ready to talk to you via ZMQ i
 
 Each message between Sn3DPlatform.exe and your app consists of two frames:
 
-- Envelop: An ASCII string with a maximum length of 255. It contains two parts: 
+- Envelop: An ASCII string with a maximum length of 255. It contains two parts:
   - Version: the version of this message. Currently only `"v1.0"` is supported.
   - Commands: the actual commands of this message. The commands may have several parts, who are joined by character `/`.
 - Payload: A byte array with a maximum length of 1024. It could be an integer, a string, or a JSON object, depending on the certain command.
@@ -182,7 +182,7 @@ All the asynchronous actions are listed below:
 
 The beginning JSON format is below:
 
-```json
+```js
 {
     "type": "AAT_CHECK_DEVICE",
     "props": {}
@@ -193,7 +193,7 @@ The `props` differs between different actions. It will be explained in detail un
 
 The finishing JSON format is below:
 
-```json
+```js
 {
     "type": "AAT_CHECK_DEVICE",
     "result":{
@@ -238,13 +238,13 @@ Related interfaces are:
 
 The message sent from SDK to the app contains JSON with the information (key and type) of the shared memory. It has no envelop. The JSON definition is below:
 
-```json
+```js
 {
-    "type": "MT_POINT_CLOUD",	// The data type
-    "key": "qtipc_XXXXXXXXXX",	// The native shared memory key
+    "type": "MT_POINT_CLOUD",   // The data type
+    "key": "qtipc_XXXXXXXXXX",  // The native shared memory key
     "name": "currentPointCloud",// The name of current data
-    "offset": 100,				// The offset from the beginning of the data (bytes)
-    "props":{}					// type-specific parameters
+    "offset": 100,              // The offset from the beginning of the data (bytes)
+    "props":{}                  // type-specific parameters
 }
 ```
 
@@ -278,22 +278,22 @@ Different data types have different props and structures.
 
 For `MT_POINT_CLOUD`, `MT_MARKERS`, `MT_RANGE_DATA` and `MT_TRI_MESH`, the props definition is:
 
-```json
+```js
 {
-    "pointCount": 1000,		// The number of points
-    "hasTexture": false,	// Whether there is texture attribute for each point
-    "hasNormal": true,		// Whether there is normal attribute for each point
-    "incremental": true,	// Whether this data is incremental to the last data
-    "hasMarkers": true,		// Whether this data contains markers
-    "haveUsed": false,		// [Todo]
+    "pointCount": 1000,     // The number of points
+    "hasTexture": false,    // Whether there is texture attribute for each point
+    "hasNormal": true,      // Whether there is normal attribute for each point
+    "incremental": true,    // Whether this data is incremental to the last data
+    "hasMarkers": true,     // Whether this data contains markers
+    "haveUsed": false,      // [Todo]
     "hasTexturePicture": false,// [Todo]
-    "faceCount": 500,		// The number of triangles
-    "textureImgWidth": 512,	// The width of texture image
+    "faceCount": 500,       // The number of triangles
+    "textureImgWidth": 512, // The width of texture image
     "textureImgHeight": 512,// The height of texture image
-    "textureUVCount": 1000,	// [Todo]
-    "hasFaceNormal": true,	// Whether there is normal attribute for each triangle
-    "packID": 0,			// Current package index, used for data segmentation
-    "totalPacks": 10		// Total package count, used for data segmentation
+    "textureUVCount": 1000, // [Todo]
+    "hasFaceNormal": true,  // Whether there is normal attribute for each triangle
+    "packID": 0,            // Current package index, used for data segmentation
+    "totalPacks": 10        // Total package count, used for data segmentation
 }
 ```
 
@@ -364,12 +364,12 @@ If `hasNormal` is `false`, then the normal part will be missing. If `hasTexture`
 
 For `MT_VIDEO_DATA`, the props definition is:
 
-```json
+```js
 {
-    "width": 512,	// Image width
-    "height": 512,	// Image height
-    "rotation": 90,	// The rotation angle (in degree)
-    "channel": 1	// The channel number for each pixel
+    "width": 512,  // Image width
+    "height": 512, // Image height
+    "rotation": 90,// The rotation angle (in degree)
+    "channel": 1   // The channel number for each pixel
 }
 ```
 
@@ -413,7 +413,7 @@ The beginning `props` is empty.
 
 The finishing `props` has the following definition:
 
-```json
+```js
 {
     "GPU": true,	// true: OK false: error
     "USB": true		// true: OK false: error
@@ -534,7 +534,7 @@ Asynchronous signals will be emitted.
 
 The beginning `props` has the following definition:
 
-```json
+```js
 {
     "type": "CT_STEREO" // the current calibration type
 }
@@ -542,7 +542,7 @@ The beginning `props` has the following definition:
 
 The finishing `props` has the following definition:
 
-```json
+```js
 {
     "type": "CT_STEREO" // the current calibration type
 }
@@ -582,7 +582,7 @@ Get the current calibration distance states for the current calibration group. I
 
 The JSON definition is as below:
 
-```json
+```js
 {
     "states": [true, true, false, false, true]
 }
@@ -674,7 +674,7 @@ Get the point distance (i.e. resolution) range.
 
 The JSON definition is below:
 
-```json
+```js
 {
     "min": 0.2,
     "max": 1.0
@@ -692,7 +692,7 @@ Get the predefined resolution values (i.e. point distances).
 
 The JSON definition is below:
 
-```json
+```js
 {
     "high": 1.0,
     "mid": 0.5,
@@ -708,7 +708,6 @@ Get the framerate.
 | ----------- | ------------------- | ----------------- |
 | Publish     | v1.0/scan/framerate | Int               |
 | Request Get | v1.0/scan/framerate | REQ:None REP: Int |
-
 
 ### Point count
 
@@ -727,7 +726,6 @@ Get the count of markers while scanning.
 | ----------- | --------------------- | ----------------- |
 | Publish     | v1.0/scan/markerCount | Int               |
 | Request Get | v1.0/scan/markerCount | REQ:None REP: Int |
-
 
 ### Triangle count in fix mode
 
@@ -758,10 +756,10 @@ Get the speculated frame count and the memory size needed for each frame. It is 
 
 The JSON definition is below:
 
-```json
+```js
 {
-    "count": 10,	// the speculated frame count
-    "memory": 100	// the speculated memory size for each frame (MB)
+    "count": 10,  // the speculated frame count
+    "memory": 100 // the speculated memory size for each frame (MB)
 }
 ```
 
@@ -776,14 +774,14 @@ Get the camera position while scanning. The position is represented using look a
 
 The JSON definition is as below:
 
-```json
+```js
 {
     "center": [0, 0, 0],
     "position": [1, 0, 0],
     "up": [0, 0, 1],
-    "boundBox": false	// if true, the renderer needs to calculate the RT according to the
-    					// scene data while keeping the center unchanged (effectively 
-    					// ignoring the position and up). Usually in fix mode
+    "boundBox": false // if true, the renderer needs to calculate the RT according to the
+                      // scene data while keeping the center unchanged (effectively 
+                      // ignoring the position and up). Usually in fix mode
 }
 ```
 
@@ -819,7 +817,7 @@ Get the range for brightness that can be set on the camera.
 
 The JSON definition is below:
 
-```json
+```js
 {
     "min": 0,
     "max": 10
@@ -972,15 +970,15 @@ The reply of request set denotes whether the action is successful.
 
 The request JSON definition is below:
 
-```json
+```js
 {
-    "path": "c:/a",					// Where to create the project
-    "globalMarkerFile": "c:/b.p3",	// The absolute global marker file path if used
-    "textureEnabled": false,		// Whether texture is enabled
-    "pointDist": 0.5,				// The point distance/definition
-    "alignType": "AT_FEATURES",		// The alignment type
-    "rapidMode": false,				// Whether it's EP rapid mode
-    "faseSave": false				// Whether it's EP fast save mode
+    "path": "c:/a",               // Where to create the project
+    "globalMarkerFile": "c:/b.p3",// The absolute global marker file path if used
+    "textureEnabled": false,      // Whether texture is enabled
+    "pointDist": 0.5,             // The point distance/definition
+    "alignType": "AT_FEATURES",   // The alignment type
+    "rapidMode": false,           // Whether it's EP rapid mode
+    "faseSave": false             // Whether it's EP fast save mode
 }
 ```
 
@@ -1006,7 +1004,7 @@ The beginning `props` is empty.
 
 The finish `props`'s definition is:
 
-```json
+```js
 {
     "pointCount": 1000,	// The point count of the model
     "hasTexture": true	// Whether this project contains texture
@@ -1074,17 +1072,17 @@ Get parameters of last simplification operation.
 
 The JSON definition is below:
 
-```json
+```js
 {
-    "faceCount": 1000,	// triangle count
-    "vertexCount": 2000,	// vertex count
-    "needSmoothing": true,	// whether smoothing is needed
-    "needSharping": false,	// whether sharping is needed
-    "highQualityExtend": true,	// whether texture extending is needed
-    "fillMarkerHole": true,	// whether marker holes should be filled
-    "fillPlainHole": true,	// whether normal/plain holes should be filled
-    "fillHolePerimeter": 3.0,	// perimeter for plain holes to be filled
-    "simplifyRatio": 10	// 0 - 100
+    "faceCount": 1000,        // triangle count
+    "vertexCount": 2000,      // vertex count
+    "needSmoothing": true,    // whether smoothing is needed
+    "needSharping": false,    // whether sharping is needed
+    "highQualityExtend": true,// whether texture extending is needed
+    "fillMarkerHole": true,   // whether marker holes should be filled
+    "fillPlainHole": true,    // whether normal/plain holes should be filled
+    "fillHolePerimeter": 3.0, // perimeter for plain holes to be filled
+    "simplifyRatio": 10       // 0 - 100
 }
 ```
 
@@ -1099,11 +1097,10 @@ Get parameters of resize in last saving operation.
 
 The JSON definition is below:
 
-```json
+```js
 {
-    "dimensions": [1.0, 1.0, 1.0], // dimensions for x, y, z
-    "vertexCount": 1000,	// vertex count
+    "dimensions": [1.0, 1.0, 1.0],// dimensions for x, y, z
+    "vertexCount": 1000,          // vertex count
     ""
 }
 ```
-

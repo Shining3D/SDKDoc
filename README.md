@@ -6,6 +6,7 @@
 | 2019-03-05 | v1.0 beta2 | Jinming Chen | Add section of shared memory             |
 | 2019-03-06 | v1.0 beta3 | Jinming Chen | Add section of video data and range data |
 | 2019-03-07 | v1.0 beta4 | Jinming Chen | Add new project and open project         |
+| 2019-03-11 | v1.0 beta5 | Jinming Chen | Add save project                         |
 
 - [SDK Document](#sdk-document)
   - [Overview](#overview)
@@ -73,6 +74,7 @@
     - [Last degree of mesh detail](#last-degree-of-mesh-detail)
     - [Last simplification params](#last-simplification-params)
     - [Last resize params for saving](#last-resize-params-for-saving)
+    - [Save mesh to disk](#save-mesh-to-disk)
 
 ## Overview
 
@@ -263,7 +265,7 @@ In C#, the same thing can be done like this:
 
 ```c#
 using System.IO.MemoryMappedFiles;
-MemoryMappedFile mm = MemoryMappedFile.OpenExisting(@"qtipc_XXXXXXXXXX", 
+MemoryMappedFile mm = MemoryMappedFile.OpenExisting(@"qtipc_XXXXXXXXXX",
                                                     MemoryMappedFileRights.ReadWrite);
 using(var accessor = mm.CreateViewAccessor(0, 512)){
     // read/write using accessor
@@ -329,7 +331,7 @@ For `meshData`, since the data is too large, it is sent via 4 sequential units, 
 If `pointCount` is non-zero, this unit delivers the vertices. The structures on the shared memory starting at offset `offset` are almost the same as point cloud except the absence of `id`:
 
 ![image-20190305144233650](assets/image-20190305144233650.png)
-   
+
 If `hasNormal` is `false`, then the normal part will be missing. If `hasTexture` is false, then the color part will be missing. If `incremental` is false, the id part will be missing.
 
 **Unit 2: Texture image unit.**
@@ -341,7 +343,7 @@ If `hasTexturePicture` is `true`, this unit delivers the texture image. The imag
 If `faceCount` is non-zero, this unit delivers the indexed triangles.  The structures on the shared memory starting at offset `offset` are:
 
 ![image-20190305145018407](assets/image-20190305145018407.png)
-   
+
 If `hasTexturePicture` is false, then the part of texture uv index will be absent.
 
 **Unit 4: Texture UV unit.**
@@ -407,7 +409,7 @@ Check the hardware environment to determine whether the GPU and USB are good for
 
 The reply of request set denotes whether the action is successful.
 
-Asynchronous signals will be emitted. 
+Asynchronous signals will be emitted.
 
 The beginning `props` is empty.
 
@@ -415,8 +417,8 @@ The finishing `props` has the following definition:
 
 ```js
 {
-    "GPU": true,	// true: OK false: error
-    "USB": true		// true: OK false: error
+    "GPU": true,// true: OK false: error
+    "USB": true // true: OK false: error
 }
 ```
 
@@ -530,7 +532,7 @@ Get or set the current calibration type. There are 4 different calibration type 
 
 The reply of request set denotes whether the action is successful.
 
-Asynchronous signals will be emitted. 
+Asynchronous signals will be emitted.
 
 The beginning `props` has the following definition:
 
@@ -780,7 +782,7 @@ The JSON definition is as below:
     "position": [1, 0, 0],
     "up": [0, 0, 1],
     "boundBox": false // if true, the renderer needs to calculate the RT according to the
-                      // scene data while keeping the center unchanged (effectively 
+                      // scene data while keeping the center unchanged (effectively
                       // ignoring the position and up). Usually in fix mode
 }
 ```
@@ -882,7 +884,7 @@ Whether the light box is opened.
 
 ### Has mesh data
 
-Whether has mesh data. 
+Whether has mesh data.
 
 [Todo] needs more explanation...
 
@@ -984,7 +986,7 @@ The request JSON definition is below:
 
 Note: the project can only be created **after** entering a certain type of scanning. So developers should call entering scan before calling this interface.
 
-Asynchronous signals will be emitted. 
+Asynchronous signals will be emitted.
 
 The beginning `props` and finishing `props`  are both empty, and there is no `progress` signal.
 
@@ -998,7 +1000,7 @@ Open an existing project.
 
 The request payload is the absolute path of the project. The reply of request set denotes whether the action is successful.
 
-Asynchronous signals will be emitted. 
+Asynchronous signals will be emitted.
 
 The beginning `props` is empty.
 
@@ -1006,8 +1008,8 @@ The finish `props`'s definition is:
 
 ```js
 {
-    "pointCount": 1000,	// The point count of the model
-    "hasTexture": true	// Whether this project contains texture
+    "pointCount": 1000,// The point count of the model
+    "hasTexture": true // Whether this project contains texture
 }
 ```
 
@@ -1088,7 +1090,7 @@ The JSON definition is below:
 
 ### Last resize params for saving
 
-Get parameters of resize in last saving operation.
+Get parameters of resize in last saving operation. It can be used to retrieve the predicted results if the mesh is scaled under a certain ratio.
 
 | Type        | Envelop                        | Payload             |
 | ----------- | ------------------------------ | ------------------- |
@@ -1101,6 +1103,34 @@ The JSON definition is below:
 {
     "dimensions": [1.0, 1.0, 1.0],// dimensions for x, y, z
     "vertexCount": 1000,          // vertex count
-    ""
+    "resizeRatio": 0.1            // scale ration
 }
 ```
+
+### Save mesh to disk
+
+Ask the SDK save/export corresponding formats to the disk.
+
+| Type    | Envelop        | Payload                 |
+| ------- | -------------- | ----------------------- |
+| Request | v1.0/scan/save | REQ: JSON REP: Int Bool |
+
+The JSON definition is below:
+
+```js
+{
+    "path": "C:/abc",  // The directory where the exported files are stored
+    "resizeRatio": 0.1,// The resize ratio
+    "p3": true,        // Whether p3 format is exported
+    "asc": true,       // Whether asc format is exported
+    "sasc": true,      // Whether sasc format is exported
+    "stl": true,       // Whether stl format is exported
+    "obj": true,       // Whether obj format is exported
+    "ply": true,       // Whether ply format is exported
+    "3mf": true,       // Whether 3mf format is exported
+}
+```
+
+Asynchronous signals will be emitted.
+
+The beginning `props` and finish `props` are both empty, and there is no `progress` signal.

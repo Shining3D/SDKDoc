@@ -1,12 +1,12 @@
 # SDK Document
 
-| Time       | Version    | Author       | Modified contents                        |
-| ---------- | ---------- | ------------ | ---------------------------------------- |
-| 2019-02-28 | v1.0 beta  | Jinming Chen | Initial publish                          |
-| 2019-03-05 | v1.0 beta2 | Jinming Chen | Add section of shared memory             |
-| 2019-03-06 | v1.0 beta3 | Jinming Chen | Add section of video data and range data |
-| 2019-03-07 | v1.0 beta4 | Jinming Chen | Add new project and open project         |
-| 2019-03-11 | v1.0 beta5 | Jinming Chen | Add save project                         |
+| Time       | Version    | Author       | Modified contents                              |
+| ---------- | ---------- | ------------ | ---------------------------------------------- |
+| 2019-02-28 | v1.0 beta  | Jinming Chen | Initial publish                                |
+| 2019-03-05 | v1.0 beta2 | Jinming Chen | Add section of shared memory                   |
+| 2019-03-06 | v1.0 beta3 | Jinming Chen | Add section of video data and range data       |
+| 2019-03-07 | v1.0 beta4 | Jinming Chen | Add new project and open project               |
+| 2019-03-11 | v1.0 beta5 | Jinming Chen | Add save project and start/end/cancel scanning |
 
 - [SDK Document](#sdk-document)
   - [Overview](#overview)
@@ -64,8 +64,13 @@
     - [Scan distance](#scan-distance)
     - [Rapid mode of EP](#rapid-mode-of-ep)
     - [Rapid save of EP](#rapid-save-of-ep)
+    - [Enter scan](#enter-scan)
+    - [Exit scan](#exit-scan)
     - [Create new project](#create-new-project)
     - [Open project](#open-project)
+    - [Start/pause/resume scanning](#startpauseresume-scanning)
+    - [End scanning](#end-scanning)
+    - [Cancel scanning](#cancel-scanning)
     - [No markers detected](#no-markers-detected)
     - [Too flat](#too-flat)
     - [Track lost](#track-lost)
@@ -593,19 +598,16 @@ Note: The number of elements of `states` depends on the corresponding calibratio
 
 ### Scan type
 
-Get or set the current scanning type. There are 3 different types currently:
+Get the current scanning type. There are 3 different types currently:
 
 - `"ST_FIXED"`: Fix mode scanning.
 - `"ST_HD"`: HD scanning.
 - `"ST_RAPID"`: Rapid mode scanning.
 
-| Type        | Envelop            | Payload                   |
-| ----------- | ------------------ | ------------------------- |
-| Publish     | v1.0/scan/type     | String                    |
-| Request Get | v1.0/scan/type     | REQ: None REP: String     |
-| Request Set | v1.0/scan/type/set | REQ: String REP: Int Bool |
-
-The reply of request set denotes whether the action is successful.
+| Type        | Envelop        | Payload               |
+| ----------- | -------------- | --------------------- |
+| Publish     | v1.0/scan/type | String                |
+| Request Get | v1.0/scan/type | REQ: None REP: String |
 
 ### Scan sub-type
 
@@ -950,6 +952,34 @@ Whether it is capable of rapid saving. It is only meaningful for EP.
 | Publish     | v1.0/scan/rapidSave | Int Bool                |
 | Request Get | v1.0/scan/rapidSave | REQ: None REP: Int Bool |
 
+### Enter scan
+
+Ask the SDK to enter the certain type of scan. There are 3 different scan types currently, as stated previously [Scan type](#scan-type).
+
+| Type    | Envelop             | Payload                   |
+| ------- | ------------------- | ------------------------- |
+| Request | v1.0/scan/enterScan | REQ: String REP: Int Bool |
+
+The reply of request set denotes whether the action is successful.
+
+Asynchronous signals will be emitted.
+
+The beginning `props` and finishing `props`  are both empty, and there is no `progress` signal.
+
+### Exit scan
+
+Ask the SDK to exit from current scanning.
+
+| Type    | Envelop            | Payload                 |
+| ------- | ------------------ | ----------------------- |
+| Request | v1.0/scan/exitScan | REQ: None REP: Int Bool |
+
+The reply of request set denotes whether the action is successful.
+
+Asynchronous signals will be emitted.
+
+The beginning `props` and finishing `props`  are both empty, and there is no `progress` signal.
+
 ### Create new project
 
 Create new project with necessary parameters.
@@ -1000,6 +1030,98 @@ The finish `props`'s definition is:
 {
     "pointCount": 1000,// The point count of the model
     "hasTexture": true // Whether this project contains texture
+}
+```
+
+There is no `progress` signal.
+
+### Start/pause/resume scanning
+
+Ask the SDK to start/pause/resume scanning with specified parameters.
+
+| Type    | Envelop             | Payload                 |
+| ------- | ------------------- | ----------------------- |
+| Request | v1.0/scan/startScan | REQ: JSON REP: Int Bool |
+
+The reply of request set denotes whether the action is successful.
+
+The JSON definition is:
+
+```js
+{
+    "enableHDR": false,             // Whether HDR should be enabled
+    "alignType": "AT_FEATURES",     // The alignment type
+    "subScanType": "SST_FIXED_FREE",// Sub scan type
+    "turntableTimes": 10            // The turn times in fix mode
+}
+```
+
+The `alignType` can be referred to [Scan alignment type](#scan-alignment-type), and `subScanType` can be referred to [Scan sub-type](#scan-sub-type).
+
+Asynchronous signals will be emitted. The async action type is `"AAT_SCAN"`.
+
+Both the beginning and finishing `props`'s definitions are:
+
+```js
+{
+    "fixScan": false,// Whether it is fix mode
+    "status": "SS_PRE_SCAN"// Current scanning state
+}
+```
+
+There is no `progress` signal.
+
+The `status` means the current scanning status on the device before the async action actually performs.
+
+### End scanning
+
+Ask the SDK to end current scanning.
+
+| Type    | Envelop           | Payload                 |
+| ------- | ----------------- | ----------------------- |
+| Request | v1.0/scan/endScan | REQ: JSON REP: Int Bool |
+
+The reply of request set denotes whether the action is successful.
+
+The JSON definition is:
+
+```js
+{
+    "globalOptimize": true,// Whether perform global optimize
+    "pointDist": 0.5,// Point distance
+    "rebuildData": false// Whether rebuild is required [Todo] Need more explanation.
+}
+```
+
+Asynchronous signals will be emitted. The async action type is `"AAT_SCAN"`.
+
+Both the beginning and finishing `props`'s are empty, and there is no `progress` signal.
+
+### Cancel scanning
+
+Ask the SDK to cancel current scanning.
+
+| Type    | Envelop              | Payload                 |
+| ------- | -------------------- | ----------------------- |
+| Request | v1.0/scan/cancelScan | REQ: JSON REP: Int Bool |
+
+The reply of request set denotes whether the action is successful.
+
+The JSON definition is:
+
+```js
+{
+    "dataNames": ["wholePointCloud"]// Shared memory names which need clearing
+}
+```
+
+Asynchronous signals will be emitted. The async action type is `"AAT_SCAN"`.
+
+The beginning `props` is empty, and the finish `props` is:
+
+```js
+{
+    "turntableScanCancel": false// [Todo] Need explanation
 }
 ```
 

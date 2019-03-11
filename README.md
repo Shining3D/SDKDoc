@@ -53,7 +53,6 @@
     - [Scan with global markers](#scan-with-global-markers)
     - [Current brightness](#current-brightness)
     - [Brightness range](#brightness-range)
-    - [Current point count](#current-point-count)
     - [Point count in wrapped mesh](#point-count-in-wrapped-mesh)
     - [HDR](#hdr)
     - [Use discovery](#use-discovery)
@@ -825,15 +824,6 @@ The JSON definition is below:
     "max": 10
 }
 ```
-
-### Current point count
-
-Get the current point count for this scanning.
-
-| Type        | Envelop              | Payload           |
-| ----------- | -------------------- | ----------------- |
-| Publish     | v1.0/scan/pointCount | Int               |
-| Request Get | v1.0/scan/pointCount | REQ:None REP: Int |
 
 ### Point count in wrapped mesh
 

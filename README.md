@@ -7,6 +7,7 @@
 | 2019-03-06 | v1.0 beta3 | Jinming Chen | Add section of video data and range data       |
 | 2019-03-07 | v1.0 beta4 | Jinming Chen | Add new project and open project               |
 | 2019-03-11 | v1.0 beta5 | Jinming Chen | Add save project and start/end/cancel scanning |
+| 2019-03-12 | v1.0 beta6 | Jinming Chen | Add mesh, export data and manual align         |
 
 - [SDK Document](#sdk-document)
   - [Overview](#overview)
@@ -74,11 +75,14 @@
     - [No markers detected](#no-markers-detected)
     - [Too flat](#too-flat)
     - [Track lost](#track-lost)
+    - [Manual align](#manual-align)
     - [Last mesh type](#last-mesh-type)
+    - [Mesh/Wrap the point cloud](#meshwrap-the-point-cloud)
     - [Last degree of mesh detail](#last-degree-of-mesh-detail)
     - [Last simplification params](#last-simplification-params)
     - [Last resize params for saving](#last-resize-params-for-saving)
     - [Save mesh to disk](#save-mesh-to-disk)
+    - [Export sharable data](#export-sharable-data)
 
 ## Overview
 
@@ -1154,6 +1158,39 @@ Emitted when the tracking is lost for current scanning.
 | Publish     | v1.0/scan/trackLost | Int Bool                |
 | Request Get | v1.0/scan/trackLost | REQ: None REP: Int Bool |
 
+### Manual align
+
+Ask the SDK to manual align the point clouds. It is only available under fix mode scanning.
+
+| Type    | Envelop               | Payload                 |
+| ------- | --------------------- | ----------------------- |
+| Request | v1.0/scan/manualAlign | REQ: JSON REP: Int Bool |
+
+The reply of request set denotes whether the action is successful.
+
+The JSON definition is:
+
+```js
+{
+    "firstPointClouds": ["a", "b", "c"],// The first group of point clouds
+    "firstRefPoints":[                  // The reference points on the first group
+        {"x": 0, "y": 0, "z": 0},
+        {"x": 1, "y": 1, "z": 1},
+        {"x": 2, "y": 2, "z": 2}
+    ],
+    "secondPointClouds": ["d", "e", "f"],// The second group of point clouds
+        "firstRefPoints":[               // The reference points on the second group
+        {"x": 0, "y": 0, "z": 0},
+        {"x": 1, "y": 1, "z": 1},
+        {"x": 2, "y": 2, "z": 2}
+    ]
+}
+```
+
+Asynchronous signals will be emitted. The async action type is `"AAT_MANUAL_ALIGN"`.
+
+The beginning `props` and finish `props`'s definition are both empty, and there is no `progress` signal.
+
 ### Last mesh type
 
 Get the mesh type of last wrapping operation. There are 2 different mesh types currently:
@@ -1165,6 +1202,31 @@ Get the mesh type of last wrapping operation. There are 2 different mesh types c
 | ----------- | ---------------------- | --------------------- |
 | Publish     | v1.0/scan/lastMeshType | String                |
 | Request Get | v1.0/scan/lastMeshType | REQ: None REP: String |
+
+### Mesh/Wrap the point cloud
+
+Ask the SDK to mesh/wrap the current point cloud.
+
+| Type    | Envelop        | Payload                 |
+| ------- | -------------- | ----------------------- |
+| Request | v1.0/scan/mesh | REQ: JSON REP: Int Bool |
+
+The JSON definition is:
+
+```js
+{
+    "type": "MT_NON_WATERTIGHT",// The mesh type required
+    "resolution": "mid"         // The resolution for the mesh
+}
+```
+
+There are 2 different mesh type currently, please refer to [Last mesh type](#last-mesh-type). And there are 3 different resolutions currently, please refer to [Predefined resolution values](#predefined-resolution-values).
+
+Asynchronous signals will be emitted. The async action type is `"AAT_MESH"`.
+
+The beginning `props` and finish `props` are both empty
+
+There is `progress` signal, so developers can connect to the signal to get the process state.
 
 ### Last degree of mesh detail
 
@@ -1227,6 +1289,8 @@ Ask the SDK save/export corresponding formats to the disk.
 | ------- | -------------- | ----------------------- |
 | Request | v1.0/scan/save | REQ: JSON REP: Int Bool |
 
+The reply of request set denotes whether the action is successful.
+
 The JSON definition is below:
 
 ```js
@@ -1243,6 +1307,33 @@ The JSON definition is below:
 }
 ```
 
-Asynchronous signals will be emitted.
+Asynchronous signals will be emitted. The async action type is `"AAT_SAVE"`.
 
 The beginning `props` and finish `props` are both empty, and there is no `progress` signal.
+
+### Export sharable data
+
+Ask the SDK to export sharable data so that the user can share to other platforms like Sketchfab or SolidEdge.
+
+There are 2 different platforms currently:
+
+- `"sketchfab"`
+- `"solidedge"`
+
+| Type    | Envelop              | Payload                   |
+| ------- | -------------------- | ------------------------- |
+| Request | v1.0/scan/exportFile | REQ: String REP: Int Bool |
+
+The reply of request set denotes whether the action is successful.
+
+Asynchronous signals will be emitted. The async action type is `"AAT_EXPORT_SHARE_DATA"`.
+
+The beginning `props` is both empty. The finish `props`'s definition is:
+
+```js
+{
+    "filePath": "c:/abc.stl"// The exported file path
+}
+```
+
+There is no `progress` signal.

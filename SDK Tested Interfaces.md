@@ -1,0 +1,27 @@
+# Tested interfaces
+
+- Heartbeat
+- Shared memory
+  - Video data
+  - Point cloud
+- Device check
+- Firmware upgradable
+- PLE
+- Texture/Color camera
+- Device status
+- Calibration time
+- Calibration type
+- Calibration group
+- Calibration distance
+- Calibration distance states
+- Predefined resolution values
+- Enter scan
+- Exit scan
+- Framerate
+- Create new project
+- Open project
+- Start/pause/resume scanning
+- End scanning
+- Track lost
+- Mesh/Wrap the point cloud
+- Save mesh to disk

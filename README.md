@@ -8,6 +8,7 @@
 | 2019-03-07 | v1.0 beta4 | Jinming Chen | Add new project and open project               |
 | 2019-03-11 | v1.0 beta5 | Jinming Chen | Add save project and start/end/cancel scanning |
 | 2019-03-12 | v1.0 beta6 | Jinming Chen | Add mesh, export data and manual align         |
+| 2019-03-21 | v1.0 beta7 | Jinming Chen | Add enter cali & exit cali                     |
 
 - [SDK Document](#sdk-document)
   - [Overview](#overview)
@@ -30,6 +31,8 @@
     - [PLE](#ple)
     - [Device status](#device-status)
     - [Device events](#device-events)
+    - [Enter calibration](#enter-calibration)
+    - [Exit calibration](#exit-calibration)
     - [Calibration time](#calibration-time)
     - [Snap enabled](#snap-enabled)
     - [Calibration type](#calibration-type)
@@ -501,6 +504,30 @@ The 2X series camera carries several buttons. This interface broadcasts the butt
 | Type    | Envelop          | Payload |
 | ------- | ---------------- | ------- |
 | Publish | v1.0/devce/event | String  |
+
+### Enter calibration
+
+Ask the SDK to enter the calibration mode.
+
+| Type    | Envelop         | Payload                 |
+| ------- | --------------- | ----------------------- |
+| Request | v1.0/cali/enter | REQ: None REP: Int Bool |
+
+Asynchronous signals will be emitted. The async action is `"AAT_ENTER_CALI"`.
+
+The beginning and finishing `props` are both empty, and there is no `progress` signal.
+
+### Exit calibration
+
+Ask the SDK to exit the calibration mode.
+
+| Type    | Envelop         | Payload                 |
+| ------- | --------------- | ----------------------- |
+| Request | v1.0/cali/exit | REQ: None REP: Int Bool |
+
+Asynchronous signals will be emitted. The async action is `"AAT_EXIT_CALI"`.
+
+The beginning and finishing `props` are both empty, and there is no `progress` signal.
 
 ### Calibration time
 
@@ -1004,7 +1031,7 @@ The request JSON definition is below:
     "pointDist": 0.5,             // The point distance/definition
     "alignType": "AT_FEATURES",   // The alignment type
     "rapidMode": false,           // Whether it's EP rapid mode
-    "faseSave": false             // Whether it's EP fast save mode
+    "fastSave": false             // Whether it's EP fast save mode
 }
 ```
 

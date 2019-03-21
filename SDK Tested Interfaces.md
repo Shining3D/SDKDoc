@@ -9,6 +9,8 @@
 - PLE
 - Texture/Color camera
 - Device status
+- Enter calibration
+- Exit calibration
 - Calibration time
 - Calibration type
 - Calibration group

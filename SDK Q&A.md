@@ -2,15 +2,11 @@
 
 ## Q: How to launch to Sn3DPlatform?
 
-A:
-
-Sn3DPlatform is an executable which can be launched directly by double-click the exe file. Developers can also use language-specific commands to start the exe indirectly.
+A: Sn3DPlatform is an executable which can be launched directly by double-click the exe file. Developers can also use language-specific commands to start the exe indirectly.
 
 ## Q: How to communicate with Sn3DPlatform?
 
-A:
-
-You should setup at least 2 ZMQ sockets to communicate with Sn3DPlatform:
+A: You should setup at least 2 ZMQ sockets to communicate with Sn3DPlatform:
 
 1. SUB socket. It should connect to the port of Sn3DPlatform's PUB socket to receive any broadcast information published by the SDK platform.
 2. REQ socket. It should connect to the port of Sn3DPlatform's REP socket to send any request to control the device.
@@ -25,12 +21,16 @@ Suppose that port 11200 is available on the computer, then the workflow is shown
 
 ## Q: Why does the creating or opening projects fail?
 
-A:
-
-Please make sure that you have set one of the three scanning modes (fixed, HD, rapid) before creating or opening any projects. You can use the Request Set interface `v1.0/scan/type/set` and provide the coresponding scan type to make the device enter certain scanning type mode.
+A: Please make sure that you have set one of the three scanning modes (fixed, HD, rapid) before creating or opening any projects. You can use the Request Set interface `v1.0/scan/type/set` and provide the coresponding scan type to make the device enter certain scanning type mode.
 
 ## Q: How to change different scanning types?
 
-A:
+A: You should first exit scanning before changing other scanning types. Then you can use the Request Set interface `v1.0/scan/type/set` and provide the coresponding scan type to make the device enter certain scanning type mode.
 
-You should first exit scanning before changing other scanning types. Then you can use the Request Set interface `v1.0/scan/type/set` and provide the coresponding scan type to make the device enter certain scanning type mode.
+## Q: How to control the scanning?
+
+A: The controlling interface is `v1.0/scan/control`.
+
+For fix mode, if the device has turnable, then you can start and then pause or resume the scanning; otherwise, you need only start the scanning, and after scanning one frame, the device will stop by itself.
+
+For hd/rapid mode, you **MUST** first do pre scanning, then start scanning, then you can pause or resume scanning.

@@ -72,7 +72,7 @@
     - [Exit scan](#exit-scan)
     - [Create new project](#create-new-project)
     - [Open project](#open-project)
-    - [Start/pause/resume scanning](#startpauseresume-scanning)
+    - [Control scanning (pre/start/pause/resume)](#control-scanning-prestartpauseresume)
     - [End scanning](#end-scanning)
     - [Cancel scanning](#cancel-scanning)
     - [No markers detected](#no-markers-detected)
@@ -1066,13 +1066,13 @@ The finish `props`'s definition is:
 
 There is no `progress` signal.
 
-### Start/pause/resume scanning
+### Control scanning (pre/start/pause/resume)
 
-Ask the SDK to start/pause/resume scanning with specified parameters.
+Ask the SDK to pre/start/pause/resume scanning with specified parameters.
 
 | Type    | Envelop             | Payload                 |
 | ------- | ------------------- | ----------------------- |
-| Request | v1.0/scan/startScan | REQ: JSON REP: Int Bool |
+| Request | v1.0/scan/control | REQ: JSON REP: Int Bool |
 
 The reply of request set denotes whether the action is successful.
 
@@ -1080,12 +1080,27 @@ The JSON definition is:
 
 ```js
 {
-    "enableHDR": false,             // Whether HDR should be enabled
-    "alignType": "AT_FEATURES",     // The alignment type
-    "subScanType": "SST_FIXED_FREE",// Sub scan type
-    "turntableTimes": 10            // The turn times in fix mode
+    "action": "pre",                    // Action type
+    "params":{
+        "enableHDR": false,             // Whether HDR should be enabled
+        "alignType": "AT_FEATURES",     // The alignment type
+        "subScanType": "SST_FIXED_FREE",// Sub scan type
+        "turntableTimes": 10            // The turn times in fix mode
+    }
 }
 ```
+
+The `params` is only necessary when the scanning type is fix mode, otherwise it can be left empty.
+
+There are 3 different actions currently:
+
+- `"pre"`: start pre-scanning. Point cloud will be generated however it will not be saved to the actual scanning data.
+- `"start"`: start or resume the real scanning.
+- `"pause"`: pause the scanning.
+
+`"pre"` action is only available in HD mode & rapid mode, i.e. fix mode has no `"pre"` action.
+
+For fix mode scanning, `"pause"` is only available when it contains turnable.
 
 The `alignType` can be referred to [Scan alignment type](#scan-alignment-type), and `subScanType` can be referred to [Scan sub-type](#scan-sub-type).
 

@@ -21,7 +21,7 @@ If you want to resolve the scanned data like point clouds, wrapped meshes etc, y
 
 Suppose that port 11200 is available on the computer, then the workflow is shown below:
 
-![Big data analyze flow](assets/SDK big data analyze.jpg)
+![Big data analyze flow](assets/big_data_analyze.jpg)
 
 ## Q: Why does the creating or opening projects fail?
 

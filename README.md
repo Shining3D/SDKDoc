@@ -1286,9 +1286,10 @@ Get parameters of last simplification operation.
 | Type        | Envelop                      | Payload             |
 | ----------- | ---------------------------- | ------------------- |
 | Publish     | v1.0/scan/lastSimplifyParams | JSON                |
-| Request Get | v1.0/scan/lastSimplifyParams | REQ: None REP: JSON |
+| Request Get | v1.0/scan/lastSimplifyParams | REQ: None REP: JSON |  
+| Request Set | v1.0/scan/lastSimplifyParams/set | REQ: JSON REP: NONE |  
 
-The JSON definition is below:
+The request get JSON definition is below:
 
 ```js
 {
@@ -1302,7 +1303,21 @@ The JSON definition is below:
     "fillHolePerimeter": 3.0, // perimeter for plain holes to be filled
     "simplifyRatio": 10       // 0 - 100
 }
-```
+```  
+  
+ The request set JSON definition is below:  
+ 
+ ```js  
+ {  
+    "fillHoleMarker": false,  
+    "fillHolePlaint": false,  
+    "hightQualityExtend": false,  
+    "needMeshSharp: true,
+    "needMeshSmooth": true,
+    "fillHolePerimeter": 1.0,
+    "meshSampleEdit": 1.0,  
+ }  
+ ```
 
 ### Last resize params for saving
 

@@ -8,7 +8,8 @@
 | 2019-03-07 | v1.0 beta4 | Jinming Chen | Add new project and open project               |
 | 2019-03-11 | v1.0 beta5 | Jinming Chen | Add save project and start/end/cancel scanning |
 | 2019-03-12 | v1.0 beta6 | Jinming Chen | Add mesh, export data and manual align         |
-| 2019-03-21 | v1.0 beta7 | Jinming Chen | Add enter cali & exit cali                     |
+| 2019-03-21 | v1.0 beta7 | Jinming Chen | Add enter cali & exit cali                     |  
+| 2019-04-15 | v1.0 beta7 | Weijian Lin | Add post data process                    |
 
 - [SDK Document](#sdk-document)
   - [Overview](#overview)
@@ -85,7 +86,27 @@
     - [Last simplification params](#last-simplification-params)
     - [Last resize params for saving](#last-resize-params-for-saving)
     - [Save mesh to disk](#save-mesh-to-disk)
-    - [Export sharable data](#export-sharable-data)
+    - [Export sharable data](#export-sharable-data)  
+    - [Update Firmware](#update-firmware)  
+    - [Mesh Data Has Marker](#mesh-data-has-marker)  
+    - [Is Mesh Data Water Tight](#is-mesh-data-water-tight)  
+    - [Smooth](#smooth)  
+    - [Sharp](#sharp)  
+    - [Zoom](#zoom)  
+    - [Edit Fill Hole](#edit-fill-hole)  
+    - [Apply Fill Hole](#apply-fill-hole)  
+    - [Load Model](#load-model)  
+    - [Get All Hole Info](#get-all-hole-info)  
+    - [Request Data](#request-data)  
+    - [Read Data End](#read-data-end)  
+    - [Enter Post Data Process](#enter-post-data-process)  
+    - [Exit Data Post Process](#exit-data-post-process)  
+    - [Clear Mesh Data](#clear-mesh-data)  
+    - [Rebuild Texture Map](#rebuild-texture-map)  
+    - [Start Post Process Mode](#start-post-process-mode)  
+    - [Stop Post Process Mode](#stop-post-process-mode)  
+    - [Restore Raw Mesh Data](#restore-raw-mesh-data)  
+    - [Cancle Manual Align](#cancle-manual-align)  
 
 ## Overview
 
@@ -179,7 +200,7 @@ All the asynchronous actions are listed below:
 - `"AAT_END_SCAN"`: Finish the current scanning.
 - `"AAT_SCAN"`: Start scanning.
 - `"AAT_WHITE_BAL"`: Compute the white balancing.
-- `"AAT_MANUAL_ALIGN"`: Start manual alignment for multiple point clouds.
+- `"AAT_MANUAL_ALIGN"`: Start manual alignment for multiple  point clouds.
 - `"AAT_MESH"`: Start warping/meshing the point cloud.
 - `"AAT_SIMPLIFY"`: Simplify the current scanned model.
 - `"AAT_EDIT"`: Edit the current model.
@@ -191,7 +212,19 @@ All the asynchronous actions are listed below:
 - `"AAT_FIX_SCAN"`: Broadcast current state in fix scan mode.
 - `"AAT_FIX_REMOVE_DATA"`: Remove data in fix scan mode.
 - `"AAT_FIX_UPDATE_DATA_RT"`: Update the RT matrix in fix scan mode.
-- `"AAT_EXPORT_SHARE_DATA"`: Export shared data.
+- `"AAT_EXPORT_SHARE_DATA"`: Export shared data.  
+- `"AAT_LOAD_MODEL"`: Only Support Load .obj or .stl Mode.  
+- `"AAT_ENTER_POSTDATAPROCESS"`: Enter post data process.  
+- `"AAT_EXIT_POSTDATAPROCESS"`: Exit post data process.  
+- `"AAT_ENTER_FILL_HOLE_MODE"`: Enter fill hole mode.  
+- `"AAT_APPLAY_FILLHOLE"`: Apply hole mode.  
+- `"AAT_FILLING_HOLE"`: Filling hole mode.  
+- `"AAT_SMOOTH"`: Broadcast current state in smoothing the mesh data.  
+- `"AAT_SHARP"`: Broadcast current state in sharping the mesh data.  
+- `"AAT_ZOOM"`: Broadcast current state in zooming the mesh data.  
+- `"AAT_REBUILDTEXTURE"`: Rebuild texture map.  
+- `"AAT_RESTORE_RAW_MESH"`: Restore raw mesh data.  
+- `"AAT_CANCEL_ALIGEN"`: Cancle manual alignment.
 
 The beginning JSON format is below:
 
@@ -1286,10 +1319,9 @@ Get parameters of last simplification operation.
 | Type        | Envelop                      | Payload             |
 | ----------- | ---------------------------- | ------------------- |
 | Publish     | v1.0/scan/lastSimplifyParams | JSON                |
-| Request Get | v1.0/scan/lastSimplifyParams | REQ: None REP: JSON |  
-| Request Set | v1.0/scan/lastSimplifyParams/set | REQ: JSON REP: NONE |  
+| Request Get | v1.0/scan/lastSimplifyParams | REQ: None REP: JSON |
 
-The request get JSON definition is below:
+The JSON definition is below:
 
 ```js
 {
@@ -1303,21 +1335,7 @@ The request get JSON definition is below:
     "fillHolePerimeter": 3.0, // perimeter for plain holes to be filled
     "simplifyRatio": 10       // 0 - 100
 }
-```  
-  
- The request set JSON definition is below:  
- 
- ```js  
- {  
-    "fillHoleMarker": false,  
-    "fillHolePlaint": false,  
-    "hightQualityExtend": false,  
-    "needMeshSharp: true,
-    "needMeshSmooth": true,
-    "fillHolePerimeter": 1.0,
-    "meshSampleEdit": 1.0,  
- }  
- ```
+```
 
 ### Last resize params for saving
 
@@ -1393,4 +1411,164 @@ The beginning `props` is both empty. The finish `props`'s definition is:
 }
 ```
 
-There is no `progress` signal.
+There is no `progress` signal.  
+
+### Update Firmware
+
+Get the state whether needing to update the firmware.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/device/updatefirm | REQ:None REP: Int |  
+
+### Mesh data has marker
+
+Get the state whether mesh data has marker.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/meshDataHasMarker | REQ:None REP: Int |  
+
+### Is mesh data water tight
+
+Get the state whether mesh data is water tight.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/isMeshDataWaterTight | REQ:None REP: Int |  
+
+### Smooth
+
+Smooth the mesh data after the mesh operation.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/smooth | REQ:None REP: Int |  
+
+### Sharp
+
+Sharp the mesh data after the mesh operation.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/sharp | REQ:None REP: Int |  
+
+### Zoom
+
+Zoom the mesh data after the mesh operation.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/zoom | REQ:None REP: Int |  
+
+### Edit fill hole
+
+edit fill hole after the scan operation.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/editFillHole | REQ:None REP: Int |  
+
+### Apply fill hole
+
+Enter applying fill hole after the scan operation.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/applyFillHole | REQ:None REP: Int | 
+
+### Load model
+
+Enter Loading the model operation. Now only support to load .obj and .stl modle.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/loadModel | REQ:None REP: Int |  
+
+### Get all hole info
+
+To get infomation about all hole.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/getAllHoleInfo | REQ:None REP: Int |
+
+### Request data
+
+Client use this interface to inform server to request data.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/requestData | REQ:None REP: Int |  
+
+### Read data end
+
+Client use this interface to inform server to end reading data.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/readDataEnd | REQ:None REP: Int |  
+
+### Enter post data process
+
+To use this interface to enter post data process.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/enterPostDataProcess | REQ:None REP: Int |  
+
+### Exit post data process
+
+To use this interface to exit post data process.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/exitDataPostProcess | REQ:None REP: Int |  
+
+### Clear mesh data
+
+To use this interface to clear mesh data.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/clearMeshData | REQ:None REP: Int |
+
+### Rebuild texture map
+
+To use this interface to rebuild texture map.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/rebuildTextureMap | REQ:None REP: Int |
+
+### Start post process mode
+
+To use this interface to enter post process mode.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/startPostProcessMode | REQ:None REP: Int |
+
+### Stop post process mode
+
+To use this interface to stop post process mode.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/stopPostProcessMode | REQ:None REP: Int |  
+
+### Restore raw mesh data
+
+To use this interface to restore raw mesh data.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/restoreRawMeshData | REQ:None REP: Int |
+
+### Cancel manul align
+
+To use this interface to cancle manul alignment.
+
+| Type        | Envelop             | Payload           |
+| ----------- | ------------------- | ----------------- |
+| Request Get | v1.0/scan/cancelManulAlign | REQ:JSON REP: Int |

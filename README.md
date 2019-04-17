@@ -1443,7 +1443,36 @@ Smooth the mesh data after the mesh operation.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/smooth | REQ:None REP: Int |  
+| Request Get | v1.0/scan/smooth | REQ:JSON REP: Int |  
+
+The JSON definition is as below:
+
+```js
+{
+    "level": 1, //0 high 1 mid 2 low
+    "scale": 100, //scale range from 0 to 100
+}
+```
+
+Asynchronous signals will be emitted.  
+
+The beginning `props` has the following definition:
+
+```js
+{
+    "type": "AAT_SMOOTH",
+}
+```
+
+The finishing `props` has the following definition:
+
+```js
+{
+    "type": "AAT_SMOOTH",
+    "result": "no error",
+    "props": "",
+}
+```
 
 ### Sharp
 
@@ -1451,7 +1480,36 @@ Sharp the mesh data after the mesh operation.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/sharp | REQ:None REP: Int |  
+| Request Get | v1.0/scan/sharp | REQ:JSON REP: Int |  
+
+The JSON definition is as below:
+
+```js
+{
+    "level": 2, //0 high 1 mid 2 low
+    "scale": 70, //scale range from 0 to 100
+}
+```
+
+Asynchronous signals will be emitted.  
+
+The beginning `props` has the following definition:
+
+```js
+{
+    "type": "AAT_SHARP",
+}
+```
+
+The finishing `props` has the following definition:
+
+```js
+{
+    "type": "AAT_SHARP",
+    "result": "no error",
+    "props": "",
+}
+```  
 
 ### Zoom
 
@@ -1459,23 +1517,115 @@ Zoom the mesh data after the mesh operation.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/zoom | REQ:None REP: Int |  
+| Request Get | v1.0/scan/zoom | REQ:JSON REP: Int |  
+
+The JSON definition is as below:
+
+```js
+{
+    "level": 1, //0 high 1 mid 2 low
+    "scale": 70, //scale range from 0 to 100
+}
+```
+
+Asynchronous signals will be emitted.  
+
+The beginning `props` has the following definition:
+
+```js
+{
+    "type": "AAT_ZOOM",
+}
+```
+
+The finishing `props` has the following definition:
+
+```js
+{
+    "type": "AAT_ZOOM",
+    "result": "no error",
+    "props": "",
+}
+```
 
 ### Edit fill hole
 
-edit fill hole after the scan operation.
+edit fill hole after mesh the scan data.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/editFillHole | REQ:None REP: Int |  
+| Request Get | v1.0/scan/editFillHole | REQ:JSON REP: Int |  
+
+The JSON definition is as below:
+
+```js
+{
+    "fileDataType": 1,  
+    "level": 1,  
+    "num": 2,  
+    "markerFlag": true,
+    "perimeter": 2.7,
+}
+```
+
+Asynchronous signals will be emitted.  
+
+The beginning `props` has the following definition:
+
+```js
+{
+    "type": "AAT_FILLING_HOLE",
+}
+```
+
+The finishing `props` has the following definition:
+
+```js
+{
+    "type": "AAT_FILLING_HOLE",
+    "result": "no error",
+    "props": "",
+}
+```
 
 ### Apply fill hole
 
-Enter applying fill hole after the scan operation.
+Enter applying fill hole after mesh the scan data.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/applyFillHole | REQ:None REP: Int | 
+| Request Get | v1.0/scan/applyFillHole | REQ:None REP: Int |
+
+```js
+{
+    "holeList": [1,2,3],
+    "fileDataType": 1,  
+    "level": 1,  
+    "num": 2,  
+    "markerFlag": true,
+    "perimeter": 2.7,
+}
+```
+
+Asynchronous signals will be emitted.  
+
+The beginning `props` has the following definition:
+
+```js
+{
+    "type": "AAT_APPLAY_FILLHOLE",
+}
+```
+
+The finishing `props` has the following definition:
+
+```js
+{
+    "type": "AAT_APPLAY_FILLHOLE",
+    "result": "no error",
+    "props": "",
+}
+```
 
 ### Load model
 
@@ -1483,7 +1633,29 @@ Enter Loading the model operation. Now only support to load .obj and .stl modle.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/loadModel | REQ:None REP: Int |  
+| Request Get | v1.0/scan/loadModel | REQ: String REP: Int |  
+
+The request payload is the absolute path of the model. The reply of request set denotes whether the action is successful.
+
+Asynchronous signals will be emitted.  
+
+The beginning `props` has the following definition:
+
+```js
+{
+    "type": "AAT_LOAD_MODEL",
+}
+```
+
+The finishing `props` has the following definition:
+
+```js
+{
+    "type": "AAT_LOAD_MODEL",
+    "result": "no error",
+    "props": "",
+}
+```
 
 ### Get all hole info
 
@@ -1491,7 +1663,27 @@ To get infomation about all hole.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/getAllHoleInfo | REQ:None REP: Int |
+| Request Get | v1.0/scan/getAllHoleInfo | REQ:None REP: Int |  
+
+Asynchronous signals will be emitted.  
+
+The beginning `props` has the following definition:
+
+```js
+{
+    "type": "AAT_ENTER_FILL_HOLE_MODE",
+}
+```
+
+The finishing `props` has the following definition:
+
+```js
+{
+    "type": "AAT_ENTER_FILL_HOLE_MODE",
+    "result": "no error",
+    "props": "",
+}
+```
 
 ### Request data
 
@@ -1517,6 +1709,26 @@ To use this interface to enter post data process.
 | ----------- | ------------------- | ----------------- |
 | Request Get | v1.0/scan/enterPostDataProcess | REQ:None REP: Int |  
 
+Asynchronous signals will be emitted.  
+
+The beginning `props` has the following definition:
+
+```js
+{
+    "type": "AAT_ENTER_POSTDATAPROCESS",
+}
+```
+
+The finishing `props` has the following definition:
+
+```js
+{
+    "type": "AAT_ENTER_POSTDATAPROCESS",
+    "result": "no error",
+    "props": "",
+}
+```
+
 ### Exit post data process
 
 To use this interface to exit post data process.
@@ -1524,6 +1736,26 @@ To use this interface to exit post data process.
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
 | Request Get | v1.0/scan/exitDataPostProcess | REQ:None REP: Int |  
+
+Asynchronous signals will be emitted.  
+
+The beginning `props` has the following definition:
+
+```js
+{
+    "type": "AAT_EXIT_POSTDATAPROCESS",
+}
+```
+
+The finishing `props` has the following definition:
+
+```js
+{
+    "type": "AAT_EXIT_POSTDATAPROCESS",
+    "result": "no error",
+    "props": "",
+}
+```
 
 ### Clear mesh data
 
@@ -1539,7 +1771,29 @@ To use this interface to rebuild texture map.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/rebuildTextureMap | REQ:None REP: Int |
+| Request Get | v1.0/scan/rebuildTextureMap | REQ:bool REP: Int |  
+
+The request payload is true or false. The reply of request set denotes whether the action is successful.  
+
+Asynchronous signals will be emitted.  
+
+The beginning `props` has the following definition:
+
+```js
+{
+    "type": "AAT_REBUILDTEXTURE",
+}
+```
+
+The finishing `props` has the following definition:
+
+```js
+{
+    "type": "AAT_REBUILDTEXTURE",
+    "result": "no error",
+    "props": "",
+}
+```
 
 ### Start post process mode
 
@@ -1547,7 +1801,7 @@ To use this interface to enter post process mode.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/startPostProcessMode | REQ:None REP: Int |
+| Request Get | v1.0/scan/startPostProcessMode | REQ:None REP: Int |  
 
 ### Stop post process mode
 
@@ -1563,12 +1817,79 @@ To use this interface to restore raw mesh data.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/restoreRawMeshData | REQ:None REP: Int |
+| Request Get | v1.0/scan/restoreRawMeshData | REQ:None REP: Int |  
+
+Asynchronous signals will be emitted.  
+
+The beginning `props` has the following definition:
+
+```js
+{
+    "type": "AAT_RESTORE_RAW_MESH",
+}
+```
+
+The finishing `props` has the following definition:
+
+```js
+{
+    "type": "AAT_RESTORE_RAW_MESH",
+    "result": "no error",
+    "props": "",
+}
+```
 
 ### Cancel manul align
 
-To use this interface to cancle manul alignment.
+To use this interface to cancle manul alignment. This operation is only available under fix mode scanning.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/cancelManulAlign | REQ:JSON REP: Int |
+| Request Get | v1.0/scan/cancelManulAlign | REQ:JSON REP: Int |  
+
+The JSON definition is:
+
+```js
+{
+    "names": ["a", "b", "c"],//the name of point cloud but only available under fix mode scanning.
+    "rotX":[
+        {"x": 0, "y": 0, "z": 0},
+        {"x": 1, "y": 1, "z": 1},
+        {"x": 2, "y": 2, "z": 2}
+    ],
+    "rotY":[
+        {"x": 0, "y": 0, "z": 0},
+        {"x": 1, "y": 1, "z": 1},
+        {"x": 2, "y": 2, "z": 2}
+    ],
+    "rotZ":[
+        {"x": 0, "y": 0, "z": 0},
+        {"x": 1, "y": 1, "z": 1},
+        {"x": 2, "y": 2, "z": 2}
+    ],
+    "trans":[
+        {"x": 0, "y": 0, "z": 0},
+        {"x": 1, "y": 1, "z": 1},
+        {"x": 2, "y": 2, "z": 2}
+    ],
+}
+```  
+
+Asynchronous signals will be emitted.  
+
+The beginning `props` has the following definition:
+
+```js
+{
+    "type": "AAT_CANCEL_ALIGEN",
+}
+```
+
+The finishing `props` has the following definition:
+
+```js
+{
+    "type": "AAT_CANCEL_ALIGEN",
+    "result": "no error",
+    "props": "",
+}

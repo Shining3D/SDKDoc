@@ -33,4 +33,26 @@ A: The controlling interface is `v1.0/scan/control`.
 
 For fix mode, if the device has turnable, then you can start and then pause or resume the scanning; otherwise, you need only start the scanning, and after scanning one frame, the device will stop by itself.
 
-For hd/rapid mode, you **MUST** first do pre scanning, then start scanning, then you can pause or resume scanning.
+For hd/rapid mode, you **MUST** first do pre scanning, then start scanning, then you can pause or resume scanning.  
+
+## *Q: When I display the points, the currentPointCloud and the wholePointCloud look the same?*  
+
+A: Actually, for the first frame the data of whole point and current point is indeed the same. However, for the subsequent frames, the whole points are updated in an incremental manner while the current point cloud is updated in the same manner as the first frame. So from the 2nd frame and so on, the whole point data should be different from the current point cloud.
+
+For incremental `wholePointCloud`(the `incremental` property is `true` of its props), you should update point cloud data according to the value of ID. When you receive the `incremental` wholePointCloud data, you can iterate the point cloud data to get the value of IDs which are the indice of data array. If the ID is smaller then the size of the whole point cloud, it means it is an *old* point, and you should update the origin position, normal and color using received data through the new inex of id; If the ID is equal to or larger than the size of the whole point cloud, it means it is a *new* point, and you need to append this point to the whole point cloud (effectively expanding the whole point cloud).  
+
+## *Q: For questions such as receiving point clouds, the position and normal data sequence is mixed up and the point cloud orientation is modified ?*  
+
+A: This problem may come because you manuplate the same share memory for the whole point cloud and current point cloud. These two point clouds share the same memory type of `MT_POINT_CLOUD`, however, the names of memory are different, i.e. the name for current point is `currentPointCloud` and the whole point name is `wholePointCloud`. You should distinguish them by the memory names and handle them accordingly.  
+
+## *Q: About the markers, still no data ?*  
+
+A: The reason for no marker data, I guess that you may create the project with scan align type `MT_FEATURE`. I reproduced the problem and got the marker data changed after pressing the button named refresh when I set the project type as `MT_MARKER`.  
+
+## *Q: For the last question, I create a ZMQ socket and it works for some computers, I get the point clouds and final mesh. The problem is with some computers, the socket is created and the scanner acts like it is scanning (it emits light as usual), but there is absolutely nothing to listen to in the socket ?*  
+
+A: One possible reason for that is the ZMQ socket port is occupied on the computers where the receiving function does not work.  
+
+## *Q: When I start to scan, in preview mode, and it stops scanning for apparently no reason ?*  
+
+A: Comparing the good scanning log to the stopping one, I find that it not enter the scan process with not printing relevant log. To locate the problem, I review the code for scan service to konw where to stop. Finally, I get the result that you will not save scan gray image sucessfully if your disk do not has enough space for save. So to ensure the program operating normally, you should make the project directory having enough space.

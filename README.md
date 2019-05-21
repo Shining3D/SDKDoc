@@ -2,15 +2,15 @@
 
 | Time       | Version    | Author       | Modified contents                              |
 | ---------- | ---------- | ------------ | ---------------------------------------------- |
-| 2019-02-28 | v1.0 beta  | Jinming Chen | Initial publish                                |
-| 2019-03-05 | v1.0 beta2 | Jinming Chen | Add section of shared memory                   |
-| 2019-03-06 | v1.0 beta3 | Jinming Chen | Add section of video data and range data       |
-| 2019-03-07 | v1.0 beta4 | Jinming Chen | Add new project and open project               |
-| 2019-03-11 | v1.0 beta5 | Jinming Chen | Add save project and start/end/cancel scanning |
-| 2019-03-12 | v1.0 beta6 | Jinming Chen | Add mesh, export data and manual align         |
-| 2019-03-21 | v1.0 beta7 | Jinming Chen | Add enter cali & exit cali                     |  
-| 2019-04-15 | v1.1 Release1 | Weijian Lin | Add post data process                    |  
-| 2019-05-20 | v1.1 Release2 | Weijian Lin | Add incremental point cloud handle                    |
+| 2019-02-28 | v3.0 beta  | Jinming Chen | Initial publish                                |
+| 2019-03-05 | v3.0 beta2 | Jinming Chen | Add section of shared memory                   |
+| 2019-03-06 | v3.0 beta3 | Jinming Chen | Add section of video data and range data       |
+| 2019-03-07 | v3.0 beta4 | Jinming Chen | Add new project and open project               |
+| 2019-03-11 | v3.0 beta5 | Jinming Chen | Add save project and start/end/cancel scanning |
+| 2019-03-12 | v3.0 beta6 | Jinming Chen | Add mesh, export data and manual align         |
+| 2019-03-21 | v3.0 beta7 | Jinming Chen | Add enter cali & exit cali                     |  
+| 2019-04-15 | v3.1.0 Release | Weijian Lin | Add post data process                    |  
+| 2019-05-20 | v3.1.1 Release | Weijian Lin | Add incremental point cloud handle                    |
 
 - [SDK Document](#sdk-document)
   - [Overview](#overview)

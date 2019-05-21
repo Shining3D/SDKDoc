@@ -362,7 +362,13 @@ If `hasNormal` is `false`, then the normal part will be missing. If `hasTexture`
 
 The id is integer with 4 bytes, and the others are all float with 8 bytes.
 
-For non-incremental `wholePointCloud`(the `incremental` property is `false` of its props), the complete data may be divided into`totalPacks` packages, and `packID` denotes the current package index. Developers should gather all the packages before processing the whole data.
+For non-incremental `wholePointCloud`(the `incremental` property is `false` of its props), the complete data may be divided into`totalPacks` packages, and `packID` denotes the current package index. Developers should gather all the packages before processing the whole data.  
+
+For incremental `wholePointCloud`(the `incremental` property is `true` of its props), you should update point cloud data according to the value of ID. When you receive the `incremental` wholePointCloud data, you can iterate the point cloud data to get the value of IDs which are the indice of data array. If the ID is smaller then the size of the whole point cloud, it means it is an *old* point, and you should update the origin position, normal and color using received data through the new inex of id; If the ID is equal to or larger than the size of the whole point cloud, it means it is a *new* point, and you need to append this point to the whole point cloud (effectively expanding the whole point cloud).  
+
+As mentioned above, the whole points are updated in an incremental manner while the current point cloud is updated in the same manner as the first frame. So from the 2nd frame and so on, the whole point data should be different from the current point cloud.  
+
+These two point clouds share the same memory type of `MT_POINT_CLOUD`, however, the names of memory are different, i.e. the name for current point is `currentPointCloud` and the whole point name is `wholePointCloud`. You should distinguish them by the memory names and handle them accordingly.
 
 For `currentMarker`, `frameMarkerPoint` and `wholeMarkerPoint`, the structures on the shared memory starting at offset `offset` are:
 
@@ -1068,7 +1074,7 @@ The request JSON definition is below:
 }
 ```
 
-Note: the project can only be created **after** entering a certain type of scanning. So developers should call entering scan before calling this interface.
+Note: 1.the project can only be created **after** entering a certain type of scanning. So developers should call entering scan before calling this interface. 2. About the markers data, you should create the project with scan align type `MT_FEATURE`. The marker data will change after pressing the button named refresh when you set the project type as `MT_MARKER`.
 
 Asynchronous signals will be emitted.
 

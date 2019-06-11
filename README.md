@@ -8,8 +8,8 @@
 | 2019-03-07 | v3.0 beta4 | Jinming Chen | Add new project and open project               |
 | 2019-03-11 | v3.0 beta5 | Jinming Chen | Add save project and start/end/cancel scanning |
 | 2019-03-12 | v3.0 beta6 | Jinming Chen | Add mesh, export data and manual align         |
-| 2019-03-21 | v3.0 beta7 | Jinming Chen | Add enter cali & exit cali                     |  
-| 2019-04-15 | v3.1.0 Release | Weijian Lin | Add post data process                    |  
+| 2019-03-21 | v3.0 beta7 | Jinming Chen | Add enter cali & exit cali                     |
+| 2019-04-15 | v3.1.0 Release | Weijian Lin | Add post data process                    |
 | 2019-05-20 | v3.1.1 Release | Weijian Lin | Add incremental point cloud handle                    |
 
 - [SDK Document](#sdk-document)
@@ -533,6 +533,7 @@ The current status of the device. There are two status currently:
 | Request Get | v1.0/device/status | REQ: None REP: String |
 
 ### Device events
+**Tips: If you want to use the "Plus" or "Sub" button properly, you must double click the "Start" button before pressing the button. This means that if you want to send an event function pressed by the "Plus" or "Sub" button, you must double-click the "Start" button and then press the "Plus" or "Sub" button, otherwise your event will not be sent.**
 
 The 2X series camera carries several buttons. This interface broadcasts the button events. There are four events currently:
 
@@ -1426,7 +1427,7 @@ Get the state whether needing to update the firmware.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/device/updatefirm | REQ:None REP: Int |  
+| Request Get | v1.0/device/updatefirm | REQ:None REP: Int |
 
 ### Mesh data has marker
 
@@ -1434,7 +1435,7 @@ Get the state whether mesh data has marker.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/meshDataHasMarker | REQ:None REP: Int |  
+| Request Get | v1.0/scan/meshDataHasMarker | REQ:None REP: Int |
 
 ### Is mesh data water tight
 
@@ -1442,7 +1443,7 @@ Get the state whether mesh data is water tight.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/isMeshDataWaterTight | REQ:None REP: Int |  
+| Request Get | v1.0/scan/isMeshDataWaterTight | REQ:None REP: Int |
 
 ### Smooth
 
@@ -1450,7 +1451,7 @@ Smooth the mesh data after the mesh operation.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/smooth | REQ:JSON REP: Int |  
+| Request Get | v1.0/scan/smooth | REQ:JSON REP: Int |
 
 The JSON definition is as below:
 
@@ -1487,7 +1488,7 @@ Sharp the mesh data after the mesh operation.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/sharp | REQ:JSON REP: Int |  
+| Request Get | v1.0/scan/sharp | REQ:JSON REP: Int |
 
 The JSON definition is as below:
 
@@ -1516,7 +1517,7 @@ The finishing `props` has the following definition:
     "result": "no error",
     "props": "",
 }
-```  
+```
 
 ### Zoom
 
@@ -1524,7 +1525,7 @@ Zoom the mesh data after the mesh operation.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/zoom | REQ:JSON REP: Int |  
+| Request Get | v1.0/scan/zoom | REQ:JSON REP: Int |
 
 The JSON definition is as below:
 
@@ -1561,7 +1562,7 @@ edit fill hole after mesh the scan data.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/editFillHole | REQ:JSON REP: Int |  
+| Request Get | v1.0/scan/editFillHole | REQ:JSON REP: Int |
 
 The JSON definition is as below:
 
@@ -1640,7 +1641,7 @@ Enter Loading the model operation. Now only support to load .obj and .stl modle.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/loadModel | REQ: String REP: Int |  
+| Request Get | v1.0/scan/loadModel | REQ: String REP: Int |
 
 The request payload is the absolute path of the model. The reply of request set denotes whether the action is successful.
 
@@ -1670,7 +1671,7 @@ To get infomation about all hole.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/getAllHoleInfo | REQ:None REP: Int |  
+| Request Get | v1.0/scan/getAllHoleInfo | REQ:None REP: Int |
 
 Asynchronous signals will be emitted.  
 
@@ -1698,7 +1699,7 @@ Client use this interface to inform server to request data.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/requestData | REQ:None REP: Int |  
+| Request Get | v1.0/scan/requestData | REQ:None REP: Int |
 
 ### Read data end
 
@@ -1706,7 +1707,7 @@ Client use this interface to inform server to end reading data.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/readDataEnd | REQ:None REP: Int |  
+| Request Get | v1.0/scan/readDataEnd | REQ:None REP: Int |
 
 ### Enter post data process
 
@@ -1714,7 +1715,7 @@ To use this interface to enter post data process.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/enterPostDataProcess | REQ:None REP: Int |  
+| Request Get | v1.0/scan/enterPostDataProcess | REQ:None REP: Int |
 
 Asynchronous signals will be emitted.  
 
@@ -1742,7 +1743,7 @@ To use this interface to exit post data process.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/exitDataPostProcess | REQ:None REP: Int |  
+| Request Get | v1.0/scan/exitDataPostProcess | REQ:None REP: Int |
 
 Asynchronous signals will be emitted.  
 
@@ -1778,7 +1779,7 @@ To use this interface to rebuild texture map.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/rebuildTextureMap | REQ:bool REP: Int |  
+| Request Get | v1.0/scan/rebuildTextureMap | REQ:bool REP: Int |
 
 The request payload is true or false. The reply of request set denotes whether the action is successful.  
 
@@ -1808,7 +1809,7 @@ To use this interface to enter post process mode.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/startPostProcessMode | REQ:None REP: Int |  
+| Request Get | v1.0/scan/startPostProcessMode | REQ:None REP: Int |
 
 ### Stop post process mode
 
@@ -1816,7 +1817,7 @@ To use this interface to stop post process mode.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/stopPostProcessMode | REQ:None REP: Int |  
+| Request Get | v1.0/scan/stopPostProcessMode | REQ:None REP: Int |
 
 ### Restore raw mesh data
 
@@ -1824,7 +1825,7 @@ To use this interface to restore raw mesh data.
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/restoreRawMeshData | REQ:None REP: Int |  
+| Request Get | v1.0/scan/restoreRawMeshData | REQ:None REP: Int |
 
 Asynchronous signals will be emitted.  
 
@@ -1852,7 +1853,7 @@ To use this interface to cancle manul alignment. This operation is only availabl
 
 | Type        | Envelop             | Payload           |
 | ----------- | ------------------- | ----------------- |
-| Request Get | v1.0/scan/cancelManulAlign | REQ:JSON REP: Int |  
+| Request Get | v1.0/scan/cancelManulAlign | REQ:JSON REP: Int |
 
 The JSON definition is:
 
@@ -1880,7 +1881,7 @@ The JSON definition is:
         {"x": 2, "y": 2, "z": 2}
     ],
 }
-```  
+```
 
 Asynchronous signals will be emitted.  
 
@@ -1900,3 +1901,4 @@ The finishing `props` has the following definition:
     "result": "no error",
     "props": "",
 }
+```
